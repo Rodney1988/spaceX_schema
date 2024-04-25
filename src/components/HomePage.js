@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 
-const FILMS_QUERY = gql`
+const LAUNCHES_QUERY = gql`
   query LaunchesPast($limit: Int!, $offset: Int!) {
     launchesPast(limit: $limit, offset: $offset) {
       id
@@ -11,11 +11,13 @@ const FILMS_QUERY = gql`
   }
 `;
 
+/* Prefetches Launches onMouseOver the next button */
+
 export const HomePage = () => {
   const [offset, setOffset] = useState(0); // Initialize offset state
   const limit = 3; // Set the limit per page
 
-  const { data, loading, error } = useQuery(FILMS_QUERY, {
+  const { data, loading, error, client } = useQuery(LAUNCHES_QUERY, {
     variables: { limit, offset }, // Pass limit and offset variables to the query
   });
 
@@ -31,11 +33,12 @@ export const HomePage = () => {
   if (error) return <span>{error.message}</span>;
 
   const launchDataPast = data.launchesPast;
+
   const disableNext = launchDataPast.length < limit; // Disable "Next" button if there are fewer items than the limit
   const disablePrev = offset === 0; // Disable "Previous" button if on the first page
 
   return (
-    <div className="container-fluid p-4 border ">
+    <div className="container-fluid p-4 border h-screen">
       <h1 className="text-2xl font-bold mb-4">
         Check out the SPACEX Launches below
       </h1>
@@ -52,19 +55,29 @@ export const HomePage = () => {
       <div className="flex justify-between mt-4">
         <button
           onClick={handlePrevPage}
-          className={`bg-${disablePrev ? 'red' : 'gray'}-200 hover:bg-${
-            disablePrev ? '' : 'gray'
-          }-300 px-4 py-2 rounded`}
+          /* NOTE: dynamic classes in TailwindCSS must be complete */
+          className={`${disablePrev ? 'bg-red-200' : 'bg-gray-200'} ${
+            disablePrev ? '' : 'hover:bg-gray-300'
+          } px-4 py-2 rounded`}
           disabled={disablePrev}
         >
           Previous
         </button>
         <button
-          onMouseEnter={() => console.log('enter button')}
           onClick={handleNextPage}
-          className={`bg-${disableNext ? 'red' : 'gray'}-200 hover:bg-${
-            disableNext ? '' : 'gray'
-          }-300 px-4 py-2 rounded`}
+          onMouseOver={async () => {
+            const prefetchedQuery = await client.query({
+              query: LAUNCHES_QUERY,
+              /* offset + limit prefetches query */
+              variables: { limit, offset: offset + limit },
+            });
+
+            return prefetchedQuery;
+          }}
+          /* NOTE: dynamic classes in TailwindCSS must be complete */
+          className={`${disableNext ? 'bg-red-200' : 'bg-gray-200'} ${
+            disableNext ? '' : 'hover:bg-gray-300'
+          } px-4 py-2 rounded`}
           disabled={disableNext}
         >
           Next
