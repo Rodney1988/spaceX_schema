@@ -11,16 +11,24 @@ const GET_HISTORIES = gql`
   }
 `;
 
+/* Prefetches Histories on load */
+
 export const Histories = () => {
   const [offset, setOffset] = useState(0);
   const limit = 3;
-  const { data, loading, error } = useQuery(GET_HISTORIES, {
+  /* Client deconstruction to prefetch the same query */
+  const { data, loading, error, client } = useQuery(GET_HISTORIES, {
     variables: { limit, offset },
   });
 
   if (loading) return <span>Loading...</span>;
 
   if (error) return <span>{error.message}</span>;
+
+  client.query({
+    query: GET_HISTORIES,
+    variables: { limit, offset: offset + limit },
+  });
 
   const histories = data.histories;
 
@@ -33,6 +41,19 @@ export const Histories = () => {
 
   const disableNext = histories.length < limit;
   const disablePrev = offset === 0;
+
+  if (histories.length === 0)
+    return (
+      <>
+        <pre>No more histories...</pre>
+        <button
+          onClick={handlePrevPage}
+          className="bg-gray-200 px-4 py-2 rounded"
+        >
+          Previous
+        </button>
+      </>
+    );
 
   return (
     <div className="container-fluid p-4">

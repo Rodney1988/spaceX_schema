@@ -17,6 +17,7 @@ export const HomePage = () => {
   const [offset, setOffset] = useState(0); // Initialize offset state
   const limit = 3; // Set the limit per page
 
+  /* Client deconstruction to prefetch the same query */
   const { data, loading, error, client } = useQuery(LAUNCHES_QUERY, {
     variables: { limit, offset }, // Pass limit and offset variables to the query
   });
@@ -36,6 +37,19 @@ export const HomePage = () => {
 
   const disableNext = launchDataPast.length < limit; // Disable "Next" button if there are fewer items than the limit
   const disablePrev = offset === 0; // Disable "Previous" button if on the first page
+
+  if (launchDataPast.length === 0)
+    return (
+      <>
+        <pre>No more launches...</pre>
+        <button
+          onClick={handlePrevPage}
+          className="bg-gray-200 px-4 py-2 rounded"
+        >
+          Previous
+        </button>
+      </>
+    );
 
   return (
     <div className="container-fluid p-4">
