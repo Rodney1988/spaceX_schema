@@ -23,7 +23,17 @@ export const Histories = () => {
   if (error) return <span>{error.message}</span>;
 
   const histories = data.histories;
-  console.log('histories', histories);
+
+  const handleNextPage = () => {
+    setOffset((prevOffset) => prevOffset + limit);
+  };
+  const handlePrevPage = () => {
+    setOffset((prevOffset) => Math.max(0, prevOffset - limit)); // Max ensures no negative offset numbers
+  };
+
+  const disableNext = histories.length < limit;
+  const disablePrev = offset === 0;
+
   return (
     <div className="container-fluid p-4">
       <h1>
@@ -44,8 +54,24 @@ export const Histories = () => {
       ))}
       {/* PREV + NEXT BUTTONS BELOW */}
       <div className="flex justify-between mt-4">
-        <button>Previous</button>
-        <button>Next</button>
+        <button
+          onClick={handlePrevPage}
+          disabled={disablePrev}
+          className={`${disablePrev ? 'bg-red-200' : 'bg-gray-200'} ${
+            disablePrev ? '' : 'hover:bg-gray-300'
+          } px-4 py-2 rounded`}
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNextPage}
+          disabled={disableNext}
+          className={`${disableNext ? 'bg-red-200' : 'bg-gray-200'} ${
+            disableNext ? '' : 'hover:bg-gray-300'
+          } px-4 py-2 rounded`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

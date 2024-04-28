@@ -42,11 +42,8 @@ export const HomePage = () => {
       <h1 className="text-2xl font-bold mb-4">
         Check out the <b>SPACEX Launches</b> below
       </h1>
-      {launchDataPast.map((launch) => (
-        <div
-          key={launchDataPast.id}
-          className="border w-1/3 p-4 h-40 rounded mt-5 mb-5"
-        >
+      {launchDataPast.map((launch, index) => (
+        <div key={index} className="border w-1/3 p-4 h-40 rounded mt-5 mb-5">
           <h2 className="text-lg font-bold mb-2 truncate">
             {launch.mission_name}
           </h2>
