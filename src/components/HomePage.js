@@ -38,7 +38,7 @@ export const HomePage = () => {
   const disablePrev = offset === 0; // Disable "Previous" button if on the first page
 
   return (
-    <div className="container-fluid p-4 border h-screen">
+    <div className="container-fluid p-4 ">
       <h1 className="text-2xl font-bold mb-4">
         Check out the SPACEX Launches below
       </h1>
