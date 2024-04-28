@@ -19,12 +19,12 @@ export const NavBar = () => {
             Launches
           </li>
           <li
-            onClick={() => navigate('/missions')}
+            onClick={() => navigate('/histories')}
             className={`text-white hover:text-gray-300 cursor-pointer ${
-              pathName === '/missions' ? 'text-gray-300' : ''
+              pathName === '/histories' ? 'text-gray-300' : ''
             }`}
           >
-            Missions
+            Histories
           </li>
         </ul>
       </div>

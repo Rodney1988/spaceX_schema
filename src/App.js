@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { HomePage } from './components/HomePage';
 import { NavBar } from './components/NavBar';
-import { Missions } from './components/Missions';
+import { Histories } from './components/Histories';
 
 export const client = new ApolloClient({
   uri: 'https://spacex-production.up.railway.app/',
@@ -18,7 +18,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/missions" element={<Missions />} />
+          <Route path="/histories" element={<Histories />} />
         </Routes>
       </ApolloProvider>
     </BrowserRouter>
